@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque</title>
+</head>
+<body>
+    <h1>Bem vindo ao Sistema de Controle de Estoque</h1>
+    <p>Clique abaixo para iniciar o controle:</p>
+    <button><a href="/estoque">Incluir novo item</a></button>
+    <button><a href="/baixa">Baixa de estoque</a></button>
+
+    {% if produtos %}
+        <h2>Produtos Cadastrados</h2>
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Valor Unitário</th>
+                <th>Quantidade</th>
+                <th>Total</th>
+            </tr>
+            {% for p in produtos %}
+            <tr>
+                <td> {{p.id}} </td>
+                <td> {{p.nome}} </td>
+                <td> {{p.marca}} </td>
+                <td> R$ {{ "{:,.2f}".format(p.v_u).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                <td> {{p.quantidade}} </td>
+                <td> R$ {{ "{:,.2f}".format(p.total).replace(",", "X").replace(".", ",").replace("X", ".") }} </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+    <p>Nenhum produto cadastrado ainda</p>
+    {%endif%}
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produtos</title>
+    <script>
+        function adicionarLinha() {
+            const container = document.getElementById('form-itens');
+            const novaLinha = document.createElement('div');
+            novaLinha.innerHTML = `
+                <label>Nome:</label>
+                <input type="text" name="nome[]" required>
+                <label>Marca:</label>
+                <input type="text" name="marca[]" required>
+                <label>V.U:</label>
+                <input type="text" name="v_u[]" placeholder="Ex: 99,99" required>
+                <label>Qtd:</label>
+                <input type="number" name="quantidade[]" required><br><br>
+            `;
+            container.appendChild(novaLinha);
+        }
+    </script>
+</head>
+<body>
+    <h1>Cadastro de Produto</h1>
+    <form method="POST">
+        <div id="form-itens">
+            <div>
+                <label>Nome:</label>
+                <input type="text" name="nome[]" required>
+                <label>Marca:</label>
+                <input type="text" name="marca[]" required>
+                <label>V.U:</label>
+                <input type="text" name="v_u[]" placeholder="Ex: 99,99" required>
+                <label>Qtd:</label>
+                <input type="number" name="quantidade[]" required><br><br>
+            </div>
+        </div>
+        <button type="button" onclick="adicionarLinha()">+ Adicionar Item</button><br><br>
+        <input type="submit" value="Salvar Todos">
+        <a href="/">Voltar</a>
+    </form>
+
+
+</body>
+</html>
