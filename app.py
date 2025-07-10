@@ -1,75 +1,42 @@
-from flask import Flask, render_template, redirect, url_for, request, flash, session
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, login_required, logout_user
+# app.py
+from flask import Flask, render_template, request, redirect, url_for
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from auth import db, login_manager, Usuario
+from routes import init_routes
 
 app = Flask(__name__)
 app.secret_key = 'chave-secreta'
 
-produtos = []
-next_id = 1
+# Banco de dados
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///estoque.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-@app.route('/')
+db.init_app(app)
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-def home():
-    return render_template('home.html', produtos=produtos)
+# Rotas principais
+init_routes(app)
 
-@app.route('/estoque', methods=['GET', 'POST'])
-def estoque():
-    global next_id
-    
+# Rota de login
+@app.route('/login', methods=['GET', 'POST'])
+def login():
     if request.method == 'POST':
-        nomes = request.form.getlist('nome[]')
-        marcas = request.form.getlist('marca[]')
-        valores = request.form.getlist('v_u[]')
-        quantidades = request.form.getlist('quantidade[]')
-
-        for i in range(len(nomes)):
-            nome = nomes[i]
-            marca = marcas[i]
-            v_u_str = valores[i].replace('.', '').replace(',', '.')
-            v_u = float(v_u_str)
-            quantidade = int(quantidades[i])
-            total = v_u * quantidade
-
-            produto = {
-                'id' : next_id,
-                'nome' : nome,
-                'marca' : marca,
-                'v_u' : v_u,
-                'quantidade' : quantidade,
-                'total' : total
-            }
-            
-            produtos.append(produto)
-            next_id += 1
-
-        return redirect(url_for('home'))
-    return render_template('estoque.html')
-
-@app.route('/baixa', methods=['GET', 'POST'])
-def baixa():
-    if request.method == 'POST':
-        ids = request.form.getlist('produtos_selecionados')
-
-        for produto_id_str in ids:
-            produto_id = int(produto_id_str)
-            quantidade_baixa_str = request.form.get(f'quantidade_{produto_id}')
-            if quantidade_baixa_str:
-                quantidade_baixa = int(quantidade_baixa_str)
-
-                for produto in produtos[:]:  # copia da lista para poder remover com segurança
-                    if produto['id'] == produto_id:
-                        if 0 < quantidade_baixa <= produto['quantidade']:
-                            produto['quantidade'] -= quantidade_baixa
-                            produto['total'] = produto['quantidade'] * produto['v_u']
-                            if produto['quantidade'] == 0:
-                                produtos.remove(produto)
-                        break
-
-
+        usuario = request.form['usuario']
+        senha = request.form['senha']
+        user = Usuario.query.filter_by(usuario=usuario, senha=senha).first()
+        if user:
+            login_user(user)
             return redirect(url_for('home'))
-    
-    return render_template('baixa.html', produtos=produtos)
+        else:
+            return 'Usuário ou senha inválidos'
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)
