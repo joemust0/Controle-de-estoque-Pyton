@@ -3,8 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user
 
 app = Flask(__name__)
+app.secret_key = 'chave-secreta'
 
 produtos = []
+next_id = 1
 
 @app.route('/')
 
@@ -12,8 +14,9 @@ def home():
     return render_template('home.html', produtos=produtos)
 
 @app.route('/estoque', methods=['GET', 'POST'])
-
 def estoque():
+    global next_id
+    
     if request.method == 'POST':
         nomes = request.form.getlist('nome[]')
         marcas = request.form.getlist('marca[]')
@@ -28,16 +31,17 @@ def estoque():
             quantidade = int(quantidades[i])
             total = v_u * quantidade
 
-        produto = {
-            'id' : len(produtos)+1,
-            'nome' : nome,
-            'marca' : marca,
-            'v_u' : v_u,
-            'quantidade' : quantidade,
-            'total' : total
-        }
-
-        produtos.append(produto)
+            produto = {
+                'id' : next_id,
+                'nome' : nome,
+                'marca' : marca,
+                'v_u' : v_u,
+                'quantidade' : quantidade,
+                'total' : total
+            }
+            
+            produtos.append(produto)
+            next_id += 1
 
         return redirect(url_for('home'))
     return render_template('estoque.html')
