@@ -14,43 +14,61 @@
     </script>
 </head>
 <body>
-    <h1>Baixa de estoque</h1>
+    {% extends 'base.html' %}
 
-    <button><a href="/">Voltar para Home</a></button>
+{% block title %}Baixa de Estoque{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Baixa de Estoque</h2>
 
     <form method="POST">
         {% if produtos %}
-            <table border="1" cellpadding="5">
-                    <tr>
-                        <th>Selecionar</th>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Marca</th>
-                        <th>Qtd Atual</th>
-                        <th>Qtd para Baixa</th>
-                        <th>V. Unitário</th>
-                    </tr>
-                    {% for p in produtos %}
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="produtos_selecionados" value="{{p.id}}" onclick="toggleInput(this, {{ loop.index0 }})">
-                        </td>
-                        <td>{{ p.id }}</td>
-                        <td>{{ p.nome }}</td>
-                        <td>{{ p.marca }}</td>
-                        <td>{{ p.quantidade }}</td>
-                        <td>
-                            <input type="number" name="quantidade_{{ p.id }}" id="quantidade_{{ loop.index0 }}" min="1" max="{{ p.quantidade }}" disabled required>
-                        </td>
-                        <td>R$ {{ "{:,.2f}".format(p.v_u).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
-                    </tr>
-                    {% endfor %}
-            </table><br>
-            <input type="submit" value="Baixar Selecionados">
+            <div class="table-responsive">
+                <table class="table table-bordered text-white">
+                    <thead>
+                        <tr>
+                            <th>Selecionar</th>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Marca</th>
+                            <th>Qtd Atual</th>
+                            <th>Qtd para Baixa</th>
+                            <th>V. Unitário</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in produtos %}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="produtos_selecionados" value="{{ p.id }}" onclick="toggleInput(this, {{ loop.index0 }})">
+                            </td>
+                            <td>{{ p.id }}</td>
+                            <td>{{ p.nome }}</td>
+                            <td>{{ p.marca }}</td>
+                            <td>{{ p.quantidade }}</td>
+                            <td>
+                                <input type="number" name="quantidade_{{ p.id }}" id="quantidade_{{ loop.index0 }}" class="form-control" min="1" max="{{ p.quantidade }}" disabled required>
+                            </td>
+                            <td>R$ {{ "{:,.2f}".format(p.v_u).replace(",", "X").replace(".", ",").replace("X", ".") }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" value="Baixar Selecionados" class="btn btn-warning">
         {% else %}
-            <p>Nenhum produto em estoque para dar baixa.</p>
+            <p class="text-white">Nenhum produto em estoque para dar baixa.</p>
         {% endif %}
     </form>
+
+    <script>
+        function toggleInput(checkbox, index) {
+            const campo = document.getElementById('quantidade_' + index);
+            campo.disabled = !checkbox.checked;
+            if (!checkbox.checked) campo.value = '';
+        }
+    </script>
+{% endblock %}
 
 </body>
 </html>

@@ -23,25 +23,59 @@
     </script>
 </head>
 <body>
-    <h1>Cadastro de Produto</h1>
+{% extends 'base.html' %}
+
+{% block title %}Incluir Produtos{% endblock %}
+
+{% block content %}
+    <h2 class="mb-4">Cadastro de Produto</h2>
+
     <form method="POST">
         <div id="form-itens">
-            <div>
-                <label>Nome:</label>
-                <input type="text" name="nome[]" required>
-                <label>Marca:</label>
-                <input type="text" name="marca[]" required>
-                <label>V.U:</label>
-                <input type="text" name="v_u[]" placeholder="Ex: 99,99" required>
-                <label>Qtd:</label>
-                <input type="number" name="quantidade[]" required><br><br>
+            <div class="row mb-3">
+                <div class="col">
+                    <input type="text" name="nome[]" class="form-control" placeholder="Nome" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="marca[]" class="form-control" placeholder="Marca" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="v_u[]" class="form-control" placeholder="V.U (Ex: 99,99)" required>
+                </div>
+                <div class="col">
+                    <input type="number" name="quantidade[]" class="form-control" placeholder="Qtd" required>
+                </div>
             </div>
         </div>
-        <button type="button" onclick="adicionarLinha()">+ Adicionar Item</button><br><br>
-        <input type="submit" value="Salvar Todos">
-        <a href="/">Voltar</a>
+
+        <button type="button" onclick="adicionarLinha()" class="btn btn-secondary mb-3">+ Adicionar Item</button>
+        <br>
+        <input type="submit" class="btn btn-success" value="Salvar Todos">
+        <a href="{{ url_for('home') }}" class="btn btn-light ms-2">Voltar</a>
     </form>
 
-
+    <script>
+        function adicionarLinha() {
+            const container = document.getElementById('form-itens');
+            const novaLinha = document.createElement('div');
+            novaLinha.classList.add('row', 'mb-3');
+            novaLinha.innerHTML = `
+                <div class="col">
+                    <input type="text" name="nome[]" class="form-control" placeholder="Nome" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="marca[]" class="form-control" placeholder="Marca" required>
+                </div>
+                <div class="col">
+                    <input type="text" name="v_u[]" class="form-control" placeholder="V.U (Ex: 99,99)" required>
+                </div>
+                <div class="col">
+                    <input type="number" name="quantidade[]" class="form-control" placeholder="Qtd" required>
+                </div>
+            `;
+            container.appendChild(novaLinha);
+        }
+    </script>
+{% endblock %}
 </body>
 </html>

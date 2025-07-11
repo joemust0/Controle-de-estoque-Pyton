@@ -3,8 +3,11 @@ from flask import render_template, request, redirect, url_for
 from models import Produto
 from auth import db
 from flask_login import login_required
+from flask import Blueprint
+from usuarios import usuarios_bp
 
-
+def init_routes(app):
+    app.register_blueprint(usuarios_bp)
 
 def init_routes(app):
     @app.route('/')

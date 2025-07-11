@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario</title>
+</head>
+<body>
+    {% extends 'base.html' %}
+{% block title %}Gerenciar Usuários{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Gerenciamento de Usuários</h2>
+
+<form method="POST" class="row g-3 mb-4">
+    <div class="col-md-4">
+        <input type="text" name="usuario" class="form-control" placeholder="Usuário" required>
+    </div>
+    <div class="col-md-4">
+        <input type="password" name="senha" class="form-control" placeholder="Senha" required>
+    </div>
+    <div class="col-md-2">
+        <div class="form-check">
+            <input type="checkbox" name="admin" class="form-check-input" id="adminCheck">
+            <label class="form-check-label" for="adminCheck">Administrador</label>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-success w-100">Adicionar</button>
+    </div>
+</form>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <ul class="alert alert-info">
+            {% for msg in messages %}
+                <li>{{ msg }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endwith %}
+
+<table class="table table-bordered text-white">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Usuário</th>
+            <th>Administrador</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in usuarios %}
+        <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.usuario }}</td>
+            <td>{{ 'Sim' if u.is_admin else 'Não' }}</td>
+            <td>
+                {% if u.id != current_user.id %}
+                <a href="{{ url_for('usuarios_bp.excluir_usuario', id=u.id) }}" class="btn btn-danger btn-sm">Excluir</a>
+                {% else %}
+                <span class="text-muted">Você</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+
+</body>
+</html>
