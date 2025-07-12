@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimentações Usuário</title>
+</head>
+<body>
+    {% extends 'base.html' %}
+{% block content %}
+<h2>Movimentar Produto: {{ produto.nome }}</h2>
+
+<form method="POST">
+    <label for="tipo">Tipo:</label>
+    <select name="tipo" id="tipo" required>
+        <option value="entrada">Entrada</option>
+        <option value="saida">Saída</option>
+    </select>
+
+    <label for="quantidade">Quantidade:</label>
+    <input type="number" name="quantidade" id="quantidade" min="1" required>
+
+    <button type="submit">Confirmar</button>
+</form>
+
+<a href="{{ url_for('home') }}">Voltar</a>
+{% endblock %}
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin
+from models import Usuario
 
 db = SQLAlchemy()
 login_manager = LoginManager()
