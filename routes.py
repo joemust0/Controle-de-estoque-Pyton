@@ -6,9 +6,11 @@ from flask_login import login_required, current_user
 from flask import Blueprint
 from usuarios import usuarios_bp
 from usuarios import admin_required
+from models import Usuario
+
 
 def init_routes(app):
-    # Registra blueprint de usuários
+    from usuarios import usuarios_bp
     app.register_blueprint(usuarios_bp)
 
     @app.route('/')

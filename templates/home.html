@@ -21,7 +21,7 @@
             <a href="{{ url_for('estoque') }}" class="btn btn-success me-2">➕ Incluir novo item</a>
             <a href="{{ url_for('baixa') }}" class="btn btn-warning me-2">📦 Baixa de estoque</a>
             {% if current_user.is_authenticated and current_user.is_admin %}
-                <a href="{{ url_for('usuarios') }}" class="btn btn-info">👥 Gerenciar Usuários</a>
+                <a href="{{ url_for('usuarios_bp.usuarios') }}" class="btn btn-info">👥 Gerenciar usuários</a>
             {% endif %}
         </div>
 
