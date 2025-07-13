@@ -1,16 +1,19 @@
 from flask_login import UserMixin
 from datetime import datetime
-from auth import db  # ✅ tudo certo aqui
+from auth import db 
+from werkzeug.security import generate_password_hash, check_password_hash
 
-class Usuario(UserMixin, db.Model):
-    __tablename__ = 'usuario'
+class Usuario(db.Model, UserMixin): 
     id = db.Column(db.Integer, primary_key=True)
-    usuario = db.Column(db.String(80), unique=True, nullable=False)
-    senha = db.Column(db.String(80), nullable=False)
+    usuario = db.Column(db.String(150), unique=True, nullable=False)
+    senha = db.Column(db.String(200), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
-    def get_id(self):
-        return str(self.id)
+    def set_senha(self, senha):
+        self.senha = generate_password_hash(senha)
+
+    def verificar_senha(self, senha):
+        return check_password_hash(self.senha, senha)
 
 class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -19,6 +22,8 @@ class Produto(db.Model):
     v_u = db.Column(db.Float, nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Float, nullable=False)
+    estoque_minimo = db.Column(db.Integer, nullable=False, default=1)
+
 
     movimentacoes = db.relationship('Movimentacao', backref='produto', lazy=True)
 

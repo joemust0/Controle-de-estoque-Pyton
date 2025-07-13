@@ -27,7 +27,8 @@ def usuarios():
         if Usuario.query.filter_by(usuario=usuario).first():
             flash('Usuário já existe.')
         else:
-            novo = Usuario(usuario=usuario, senha=senha, is_admin=admin)
+            novo = Usuario(usuario=usuario, is_admin=admin)
+            novo.set_senha(senha)
             db.session.add(novo)
             db.session.commit()
             flash('Usuário criado com sucesso.')

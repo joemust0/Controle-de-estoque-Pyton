@@ -13,11 +13,20 @@ def init_routes(app):
     from usuarios import usuarios_bp
     app.register_blueprint(usuarios_bp)
 
-    @app.route('/')
+    @app.route('/', methods=['GET', 'POST'])
     @login_required
     def home():
-        produtos = Produto.query.all()
-        return render_template('home.html', produtos=produtos)
+        termo = request.args.get('busca', '')
+
+        if termo:
+            produtos = Produto.query.filter(
+                (Produto.nome.ilike(f'%{termo}%')) |
+                (Produto.marca.ilike(f'%{termo}%'))
+            ).all()
+        else:
+            produtos = Produto.query.all()
+
+        return render_template('home.html', produtos=produtos, termo=termo)
 
     @app.route('/estoque', methods=['GET', 'POST'])
     @login_required

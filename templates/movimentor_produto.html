@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movimentações Usuário</title>
-</head>
-<body>
+
     {% extends 'base.html' %}
 {% block content %}
 <h2>Movimentar Produto: {{ produto.nome }}</h2>
@@ -25,6 +18,3 @@
 
 <a href="{{ url_for('home') }}">Voltar</a>
 {% endblock %}
-
-</body>
-</html>
