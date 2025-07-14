@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from models import Usuario
 from auth import db
+from flask import abort
 
 usuarios_bp = Blueprint('usuarios_bp', __name__)
 
@@ -32,6 +33,9 @@ def usuarios():
             db.session.add(novo)
             db.session.commit()
             flash('Usuário criado com sucesso.')
+
+    if not current_user.is_admin:
+        abort(403)  # ou redirecione para home
 
     lista = Usuario.query.all()
     return render_template('usuarios.html', usuarios=lista)

@@ -5,47 +5,58 @@
 {% block content %}
     {% if current_user.is_authenticated %}
         <p>Bem-vindo, {{ current_user.usuario }} | <a href="{{ url_for('logout') }}">Sair</a></p>
-    {% endif %}
 
-    <h1 class="mb-4">Bem-vindo ao Sistema de Controle de Estoque</h1>
+        <h1 class="mb-4">Bem-vindo ao Sistema de Controle de Estoque</h1>
 
-    <div class="mb-3">
-        <a href="{{ url_for('estoque') }}" class="btn btn-success me-2">➕ Incluir novo item</a>
-        <a href="{{ url_for('baixa') }}" class="btn btn-warning me-2">📦 Baixa de estoque</a>
-        {% if current_user.is_authenticated and current_user.is_admin %}
-            <a href="{{ url_for('usuarios_bp.usuarios') }}" class="btn btn-info">👥 Gerenciar usuários</a>
-        {% endif %}
-    </div>
-        <form method="get" action="{{ url_for('home') }}" style="margin-bottom: 20px;">
-            <input type="text" name="busca" placeholder="Buscar por nome ou marca" value="{{ termo }}" />
-            <button type="submit">Buscar</button>
-        </form>
-    {% if produtos %}
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                    <th>Nome</th>
-                    <th>Marca</th>
-                    <th>Qtd</th>
-                    <th>Estoque Mínimo</th>
-                    <th>Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for p in produtos %}
-                    <tr {% if p.quantidade <= p.estoque_minimo %} style="background-color: #f8d7da;" {% endif %}>
-                    <td>{{ p.nome }}</td>
-                    <td>{{ p.marca }}</td>
-                    <td>{{ p.quantidade }}</td>
-                    <td>{{ p.estoque_minimo }}</td>
-                    <td>R$ {{ '%.2f'|format(p.total) }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <div class="mb-3">
+            <a href="{{ url_for('estoque') }}" class="btn btn-success me-2">➕ Incluir novo item</a>
+            <a href="{{ url_for('baixa') }}" class="btn btn-warning me-2">📦 Baixa de estoque</a>
+            {% if current_user.is_admin %}
+                <a href="{{ url_for('usuarios_bp.usuarios') }}" class="btn btn-info">👥 Gerenciar usuários</a>
+            {% endif %}
         </div>
-    {% else %}
-        <p class="text-white">Nenhum produto cadastrado ainda.</p>
+
+        <div class="container mt-4">
+            <h2 class="text-center mb-4">Lista de Produtos</h2>
+
+            <form method="GET" action="/buscar" class="d-flex justify-content-center mb-4">
+                <input type="text" name="query" class="form-control w-50" placeholder="Buscar produto...">
+                <button type="submit" class="btn btn-primary ms-2">Buscar</button>
+            </form>
+
+            {% if produtos %}
+                <table class="table table-bordered text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Marca</th>
+                            <th>Qtd</th>
+                            <th>Estoque Mínimo</th>
+                            <th>Total</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in produtos %}
+                        <tr {% if p.quantidade <= p.estoque_minimo %} style="background-color: #111011;" {% endif %}>
+                            <td>{{ p.id }}</td> 
+                            <td>{{ p.nome }}</td>
+                            <td>{{ p.marca }}</td>
+                            <td>{{ p.quantidade }}</td>
+                            <td>{{ p.estoque_minimo }}</td>
+                            <td>R$ {{ '%.2f'|format(p.total) }}</td>
+                            <td>
+                                <a href="{{ url_for('movimentar_produto', produto_id=p.id) }}">Movimentar</a> |
+                                <a href="{{ url_for('historico_produto', produto_id=p.id) }}">Histórico</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-muted text-center">Nenhum produto cadastrado ainda.</p>
+            {% endif %}
+        </div>
     {% endif %}
 {% endblock %}

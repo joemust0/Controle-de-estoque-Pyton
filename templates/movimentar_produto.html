@@ -1,0 +1,23 @@
+
+{% extends 'base.html' %}
+{% block content %}
+ <h1>Movimentar Produto: {{ produto.nome }} ({{ produto.marca }})</h1>
+
+    <form method="POST">
+        <label for="tipo">Tipo de movimentação:</label>
+        <select name="tipo" id="tipo" required>
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+        </select><br><br>
+
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" name="quantidade" id="quantidade" min="1" required><br><br>
+
+        <button type="submit">Confirmar</button>
+        <a href="{{ url_for('home') }}">Cancelar</a>
+    </form>
+
+    <p><strong>Estoque atual:</strong> {{ produto.quantidade }}</p>
+
+<a href="{{ url_for('home') }}">Voltar</a>
+{% endblock %}
