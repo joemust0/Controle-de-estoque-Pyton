@@ -23,7 +23,7 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     user = Usuario.query.get(int(user_id))
     if not user:
-        logout_user()  # Encerra a sessão do usuário "fantasma"
+        logout_user() 
     return user
 
 # Executa a inicialização do banco e criação do admin

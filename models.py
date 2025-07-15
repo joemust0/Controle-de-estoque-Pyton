@@ -22,7 +22,7 @@ class Produto(db.Model):
     v_u = db.Column(db.Float, nullable=False)
     quantidade = db.Column(db.Integer, nullable=False)
     total = db.Column(db.Float, nullable=False)
-    estoque_minimo = db.Column(db.Integer, nullable=False, default=1)
+    estoque_minimo = db.Column(db.Integer, nullable=False, default=5)
 
 
     movimentacoes = db.relationship('Movimentacao', backref='produto', lazy=True)
